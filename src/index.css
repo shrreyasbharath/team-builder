@@ -1,7 +1,5 @@
 @import "tailwindcss";
-@custom-variant dark (&:is(.dark *));
 
-/* ── Monochromatic Dark Minimalist Theme ── */
 :root {
   --radius: 0.5rem;
   --background: #0a0a0a;
@@ -52,7 +50,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Glassmorphism Utility ── */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
@@ -60,7 +57,6 @@ body {
   box-shadow: var(--glass-shadow);
 }
 
-/* ── Football Pitch ── */
 .pitch-bg {
   background: linear-gradient(
     180deg,
@@ -71,11 +67,6 @@ body {
   position: relative;
 }
 
-.pitch-line {
-  border-color: var(--pitch-line);
-}
-
-/* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -93,57 +84,19 @@ body {
   background: #444;
 }
 
-/* ── Animations ── */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .animate-fadeIn {
@@ -158,7 +111,6 @@ body {
   animation: scaleIn 0.3s ease-out forwards;
 }
 
-/* ── Drag and Drop ── */
 .dragging {
   opacity: 0.4;
   transform: scale(0.95);
@@ -167,32 +119,4 @@ body {
 .drag-over {
   border-color: rgba(255, 255, 255, 0.3) !important;
   background: rgba(255, 255, 255, 0.08) !important;
-}
-
-/* ── Position Colors ── */
-.pos-gk {
-  --pos-color: var(--gk-color);
-}
-.pos-def {
-  --pos-color: var(--def-color);
-}
-.pos-mid {
-  --pos-color: var(--mid-color);
-}
-.pos-fwd {
-  --pos-color: var(--fwd-color);
-}
-
-/* ── Rating Badge Colors ── */
-.rating-elite {
-  color: #fbbf24;
-}
-.rating-great {
-  color: #22c55e;
-}
-.rating-good {
-  color: #3b82f6;
-}
-.rating-average {
-  color: #888888;
 }

@@ -1,7 +1,5 @@
-"use client";
-
-import Link from "next/link";
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
 
 function FloatingOrb({ className = "" }: { className?: string }) {
   return (
@@ -22,7 +20,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* ── Header ── */}
+      {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled ? "glass shadow-lg" : "bg-transparent"
@@ -42,22 +40,16 @@ export default function LandingPage() {
             </div>
             <span className="font-semibold text-sm text-white/80">Dream Team Builder</span>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/builder"
-              className="
-                px-4 py-2 rounded-lg text-xs font-medium
-                bg-white text-black hover:bg-white/90
-                transition-all duration-200
-              "
-            >
-              Get Started
-            </Link>
-          </div>
+          <Link
+            to="/builder"
+            className="px-4 py-2 rounded-lg text-xs font-medium bg-white text-black hover:bg-white/90 transition-all duration-200"
+          >
+            Get Started
+          </Link>
         </div>
       </header>
 
-      {/* ── Hero ── */}
+      {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center px-6 pt-16">
         <FloatingOrb className="top-1/4 left-1/4 bg-white blur-[120px]" />
         <FloatingOrb className="top-1/3 right-1/4 bg-white blur-[100px]" />
@@ -83,31 +75,20 @@ export default function LandingPage() {
 
           <div className="flex items-center justify-center gap-3">
             <Link
-              href="/builder"
-              className="
-                inline-flex px-6 py-3 rounded-xl text-sm font-semibold
-                bg-white text-black
-                hover:bg-white/90 hover:scale-[1.02]
-                transition-all duration-200 shadow-lg
-              "
+              to="/builder"
+              className="inline-flex px-6 py-3 rounded-xl text-sm font-semibold bg-white text-black hover:bg-white/90 hover:scale-[1.02] transition-all duration-200 shadow-lg"
             >
               Start Building
             </Link>
             <Link
-              href="/builder"
-              className="
-                inline-flex px-6 py-3 rounded-xl text-sm font-medium
-                bg-white/[0.06] text-white/60
-                hover:bg-white/[0.1] hover:text-white/80
-                transition-all duration-200
-              "
+              to="/builder"
+              className="inline-flex px-6 py-3 rounded-xl text-sm font-medium bg-white/[0.06] text-white/60 hover:bg-white/[0.1] hover:text-white/80 transition-all duration-200"
             >
               Explore Formations
             </Link>
           </div>
         </div>
 
-        {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
           <div className="w-5 h-8 rounded-full border border-white/[0.1] flex items-start justify-center p-1.5">
             <div className="w-1 h-2 rounded-full bg-white/30 animate-bounce" />
@@ -115,7 +96,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Features ── */}
+      {/* Features */}
       <section className="px-6 py-24">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -129,77 +110,43 @@ export default function LandingPage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              {
-                title: "6 Formations",
-                desc: "From 4-3-3 to 5-3-2, switch formations instantly and watch your team rearrange.",
-              },
-              {
-                title: "300+ Players",
-                desc: "Browse football legends and stars, filtered by position, club, country, and rating.",
-              },
-              {
-                title: "Budget System",
-                desc: "Start with ₹500 Crore. Negotiate transfer values and stay within your budget.",
-              },
-              {
-                title: "Drag & Drop",
-                desc: "Intuitively drag players onto the pitch. Only valid positions allowed.",
-              },
-              {
-                title: "Team Stats",
-                desc: "Track your attack, midfield, and defence ratings in real-time.",
-              },
-              {
-                title: "Dark Theme",
-                desc: "Monochromatic dark design for a premium, focused experience.",
-              },
+              { title: "6 Formations", desc: "From 4-3-3 to 5-3-2, switch formations instantly and watch your team rearrange." },
+              { title: "300+ Players", desc: "Browse football legends and stars, filtered by position, club, country, and rating." },
+              { title: "Budget System", desc: "Start with ₹500 Crore. Negotiate transfer values and stay within your budget." },
+              { title: "Drag & Drop", desc: "Intuitively drag players onto the pitch. Only valid positions allowed." },
+              { title: "Team Stats", desc: "Track your attack, midfield, and defence ratings in real-time." },
+              { title: "Dark Theme", desc: "Monochromatic dark design for a premium, focused experience." },
             ].map((feature) => (
-              <div
-                key={feature.title}
-                className="glass rounded-xl p-5 hover:bg-white/[0.06] transition-all duration-200"
-              >
-                <h3 className="text-sm font-semibold text-white/80 mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-xs text-white/40 leading-relaxed">
-                  {feature.desc}
-                </p>
+              <div key={feature.title} className="glass rounded-xl p-5 hover:bg-white/[0.06] transition-all duration-200">
+                <h3 className="text-sm font-semibold text-white/80 mb-2">{feature.title}</h3>
+                <p className="text-xs text-white/40 leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {/* CTA */}
       <section className="px-6 py-24">
         <div className="max-w-2xl mx-auto text-center glass rounded-2xl p-12">
-          <h2 className="text-2xl font-bold text-white/90 mb-3">
-            Ready to Build?
-          </h2>
+          <h2 className="text-2xl font-bold text-white/90 mb-3">Ready to Build?</h2>
           <p className="text-sm text-white/40 mb-8 max-w-sm mx-auto">
             No sign-up required. Start building your dream team right now.
           </p>
           <Link
-            href="/builder"
-            className="
-              inline-flex px-8 py-3.5 rounded-xl text-sm font-semibold
-              bg-white text-black
-              hover:bg-white/90 hover:scale-[1.02]
-              transition-all duration-200 shadow-lg
-            "
+            to="/builder"
+            className="inline-flex px-8 py-3.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-white/90 hover:scale-[1.02] transition-all duration-200 shadow-lg"
           >
             Open Team Builder
           </Link>
         </div>
       </section>
 
-      {/* ── Footer ── */}
+      {/* Footer */}
       <footer className="px-6 py-8 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <span className="text-xs text-white/20">Dream Team Builder</span>
-          <span className="text-xs text-white/20">
-            Built with Next.js · Monochromatic · 2026
-          </span>
+          <span className="text-xs text-white/20">Built with React · Monochromatic · 2026</span>
         </div>
       </footer>
     </div>
