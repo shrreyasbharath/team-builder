@@ -11,6 +11,7 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@vly-ai/integrations": "^0.6.12",
+    "convex": "^1.42.3",
     "next": "^16.2.11",
     "postcss": "^8.5.22",
     "react": "^19.2.8",
