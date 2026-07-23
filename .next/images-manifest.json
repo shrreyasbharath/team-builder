@@ -44,7 +44,7 @@
     "remotePatterns": [
       {
         "protocol": "https",
-        "hostname": "^(?:^(?:www\\.thesportsdb\\.com)$)$",
+        "hostname": "^(?:^(?:ui\\-avatars\\.com)$)$",
         "pathname": "^(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)\\/?)$"
       }
     ],

@@ -40,6 +40,12 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/builder",
+      "regex": "^/builder(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/builder(?:/)?$"
     }
   ],
   "dataRoutes": [],

@@ -66,7 +66,7 @@ self.__SERVER_FILES_MANIFEST={
       "remotePatterns": [
         {
           "protocol": "https",
-          "hostname": "www.thesportsdb.com"
+          "hostname": "ui-avatars.com"
         }
       ],
       "qualities": [
@@ -89,7 +89,7 @@ self.__SERVER_FILES_MANIFEST={
     "productionBrowserSourceMaps": false,
     "excludeDefaultMomentLocales": true,
     "reactProductionProfiling": false,
-    "reactStrictMode": true,
+    "reactStrictMode": null,
     "reactMaxHeadersLength": 6000,
     "httpAgentOptions": {
       "keepAlive": true
