@@ -1,5 +1,3 @@
-"use client";
-
 interface FormationSelectorProps {
   currentFormation: string;
   onSelect: (formation: string) => void;
@@ -21,34 +19,30 @@ export default function FormationSelector({
   onRandom,
 }: FormationSelectorProps) {
   return (
-    <div className="glass rounded-xl p-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="glass rounded-xl p-5">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest">
           Formation
         </h3>
         <button
           onClick={onRandom}
-          className="
-            text-[10px] font-medium text-white/30
-            hover:text-white/60 transition-colors
-            uppercase tracking-wider
-          "
+          className="text-xs font-medium text-white/40 hover:text-white/70 transition-colors uppercase tracking-wider"
         >
           Random
         </button>
       </div>
-      <div className="grid grid-cols-3 gap-1.5">
+      <div className="grid grid-cols-3 gap-2">
         {formations.map((f) => (
           <button
             key={f.id}
             onClick={() => onSelect(f.id)}
             className={`
-              py-2 rounded-lg text-sm font-semibold
-              transition-all duration-150
+              py-3 rounded-xl text-sm font-bold tracking-wide
+              transition-all duration-200
               ${
                 currentFormation === f.id
-                  ? "bg-white text-black shadow-lg"
-                  : "bg-white/[0.06] text-white/60 hover:bg-white/[0.1] hover:text-white/80"
+                  ? "bg-white text-black shadow-xl shadow-white/10 scale-[1.02]"
+                  : "bg-white/[0.06] text-white/50 hover:bg-white/[0.1] hover:text-white/80 hover:scale-[1.02]"
               }
             `}
           >

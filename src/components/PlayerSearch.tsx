@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useMemo } from "react";
 import type { Player } from "@/hooks/useTeamBuilder";
 
@@ -22,7 +20,6 @@ export default function PlayerSearchInner({
   const filtered = useMemo(() => {
     let result = allPlayers;
 
-    // Search by name, country, club
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(
@@ -33,7 +30,6 @@ export default function PlayerSearchInner({
       );
     }
 
-    // Position filter
     if (positionFilter !== "All") {
       result = result.filter(
         (p) =>
@@ -42,85 +38,58 @@ export default function PlayerSearchInner({
       );
     }
 
-    // Rating filter
     if (ratingFilter > 0) {
       result = result.filter((p) => p.rating >= ratingFilter);
     }
 
-    // Sort by rating descending
     result.sort((a, b) => b.rating - a.rating);
-
     return result;
   }, [allPlayers, search, positionFilter, ratingFilter]);
 
-  // Report filtered players
   useMemo(() => {
     onFilteredPlayers(filtered);
   }, [filtered, onFilteredPlayers]);
 
   return (
-    <div className="space-y-2.5">
+    <div className="space-y-4">
       {/* Search bar */}
       <div className="relative">
         <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30"
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
         <input
           type="text"
           placeholder="Search by name, country, club..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="
-            w-full pl-9 pr-3 py-2.5 rounded-lg
-            bg-white/[0.06] border border-white/[0.06]
-            text-sm text-white/80 placeholder-white/30
-            outline-none focus:border-white/[0.15]
-            transition-colors
-          "
+          className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.06] border border-white/[0.06] text-sm text-white/80 placeholder-white/30 outline-none focus:border-white/[0.15] transition-all duration-200"
         />
       </div>
 
       {/* Quick filters */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`
-            px-2.5 py-1.5 rounded-md text-[10px] font-medium
-            transition-colors uppercase tracking-wider
-            ${
-              showFilters
-                ? "bg-white/10 text-white/80"
-                : "bg-white/[0.04] text-white/40 hover:bg-white/[0.08]"
-            }
+            px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 uppercase tracking-wider
+            ${showFilters ? "bg-white/10 text-white/80" : "bg-white/[0.06] text-white/40 hover:bg-white/[0.1]"}
           `}
         >
           Filters
         </button>
-
-        {/* Rating quick select */}
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           {[0, 80, 85, 90].map((r) => (
             <button
               key={r}
               onClick={() => setRatingFilter(ratingFilter === r ? 0 : r)}
               className={`
-                px-2 py-1 rounded-md text-[10px] font-medium
-                transition-colors
-                ${
-                  ratingFilter === r
-                    ? "bg-white/10 text-white/80"
-                    : "bg-white/[0.04] text-white/40 hover:bg-white/[0.08]"
-                }
+                px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200
+                ${ratingFilter === r ? "bg-white/10 text-white/80" : "bg-white/[0.06] text-white/40 hover:bg-white/[0.1]"}
               `}
             >
               {r === 0 ? "All" : `${r}+`}
@@ -129,20 +98,15 @@ export default function PlayerSearchInner({
         </div>
       </div>
 
-      {/* Filter panel */}
+      {/* Position filter panel */}
       {showFilters && (
         <div className="animate-fadeIn">
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setPositionFilter("All")}
               className={`
-                px-2 py-1 rounded-md text-[10px] font-medium
-                transition-colors
-                ${
-                  positionFilter === "All"
-                    ? "bg-white/10 text-white/80"
-                    : "bg-white/[0.04] text-white/40 hover:bg-white/[0.08]"
-                }
+                px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200
+                ${positionFilter === "All" ? "bg-white/10 text-white/80" : "bg-white/[0.06] text-white/40 hover:bg-white/[0.1]"}
               `}
             >
               All
@@ -152,13 +116,8 @@ export default function PlayerSearchInner({
                 key={pos}
                 onClick={() => setPositionFilter(pos)}
                 className={`
-                  px-2 py-1 rounded-md text-[10px] font-medium
-                  transition-colors
-                  ${
-                    positionFilter === pos
-                      ? "bg-white/10 text-white/80"
-                      : "bg-white/[0.04] text-white/40 hover:bg-white/[0.08]"
-                  }
+                  px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200
+                  ${positionFilter === pos ? "bg-white/10 text-white/80" : "bg-white/[0.06] text-white/40 hover:bg-white/[0.1]"}
                 `}
               >
                 {pos}
@@ -169,12 +128,11 @@ export default function PlayerSearchInner({
       )}
 
       {/* Results count */}
-      <div className="text-[10px] text-white/30 font-medium px-0.5">
+      <div className="text-xs text-white/30 font-medium px-1">
         {filtered.length} players found
       </div>
     </div>
   );
 }
 
-// Wrapper to expose inner component
 export { PlayerSearchInner };

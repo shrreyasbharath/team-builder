@@ -1,5 +1,3 @@
-"use client";
-
 import type { Player } from "@/hooks/useTeamBuilder";
 import {
   getFlagEmoji,
@@ -13,7 +11,6 @@ interface PlayerCardProps {
   isSelected?: boolean;
   isInTeam?: boolean;
   isDraggable?: boolean;
-  compact?: boolean;
   onDragStart?: (e: React.DragEvent) => void;
   onClick?: () => void;
 }
@@ -23,7 +20,6 @@ export default function PlayerCard({
   isSelected = false,
   isInTeam = false,
   isDraggable = true,
-  compact = false,
   onDragStart,
   onClick,
 }: PlayerCardProps) {
@@ -32,16 +28,13 @@ export default function PlayerCard({
   return (
     <div
       className={`
-        group relative flex cursor-pointer select-none
-        transition-all duration-200 ease-out
-        ${
-          isSelected
-            ? "ring-1 ring-white/30 bg-white/[0.08]"
-            : "hover:bg-white/[0.04]"
+        group relative flex items-center cursor-pointer select-none p-4 gap-4
+        transition-all duration-200 ease-out rounded-xl border
+        ${isSelected
+          ? "ring-1 ring-white/30 bg-white/[0.08]"
+          : "border-white/[0.06] hover:bg-white/[0.04] hover:border-white/[0.1]"
         }
         ${isInTeam ? "opacity-40 pointer-events-none" : ""}
-        ${compact ? "p-2.5 gap-2.5" : "p-3 gap-3"}
-        rounded-lg border border-white/[0.06]
       `}
       draggable={isDraggable && !isInTeam}
       onDragStart={(e) => {
@@ -60,11 +53,7 @@ export default function PlayerCard({
     >
       {/* Player Image */}
       <div className="relative flex-shrink-0">
-        <div className={`
-          overflow-hidden rounded-full
-          ${compact ? "w-8 h-8" : "w-10 h-10"}
-          bg-white/[0.06]
-        `}>
+        <div className="overflow-hidden rounded-full w-12 h-12 bg-white/[0.06]">
           <img
             src={getPlayerImageUrl(player.name)}
             alt={player.name}
@@ -72,48 +61,32 @@ export default function PlayerCard({
             loading="lazy"
           />
         </div>
-        {/* Rating badge */}
-        <div className={`
-          absolute -bottom-1 -right-1
-          flex items-center justify-center
-          rounded-full bg-black/70 border border-white/10
-          text-[10px] font-bold leading-none
-          ${ratingColor}
-          ${compact ? "w-4 h-4 text-[8px]" : "w-5 h-5"}
-        `}>
+        <div className={`absolute -bottom-0.5 -right-0.5 flex items-center justify-center rounded-full bg-black/70 border border-white/10 text-[11px] font-bold leading-none w-5.5 h-5.5 ${ratingColor}`}>
           {player.rating}
         </div>
       </div>
 
       {/* Player Info */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span className={`
-            font-medium truncate
-            ${compact ? "text-xs" : "text-sm"}
-            text-white/90
-          `}>
+        <div className="flex items-center gap-2">
+          <span className="font-semibold truncate text-sm text-white/90">
             {player.name}
           </span>
         </div>
-        <div className={`
-          flex items-center gap-1.5 mt-0.5
-          text-white/50
-          ${compact ? "text-[10px]" : "text-xs"}
-        `}>
-          <span className="font-medium text-white/70">
+        <div className="flex items-center gap-2 mt-1 text-xs text-white/50">
+          <span className="font-semibold text-white/70">
             {getPositionLabel(player.primaryPosition)}
           </span>
-          <span>·</span>
-          <span>{getFlagEmoji(player.countryCode)}</span>
+          <span className="text-white/30">·</span>
+          <span className="text-base leading-none">{getFlagEmoji(player.countryCode)}</span>
           <span className="truncate">{player.club}</span>
         </div>
       </div>
 
       {/* In team indicator */}
       {isInTeam && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-lg">
-          <span className="text-[10px] text-white/60 font-medium">IN TEAM</span>
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-xl">
+          <span className="text-xs text-white/60 font-semibold tracking-wider uppercase">In Team</span>
         </div>
       )}
     </div>
