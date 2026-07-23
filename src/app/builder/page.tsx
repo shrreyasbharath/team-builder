@@ -4,7 +4,6 @@ import { useState, useCallback, useRef, useMemo } from "react";
 import Link from "next/link";
 import { useTeamBuilder, type Player } from "@/hooks/useTeamBuilder";
 import { canPlacePlayer } from "@/lib/formations";
-import { getPositionCategory } from "@/lib/utils";
 
 import Pitch from "@/components/Pitch";
 import PlayerCard from "@/components/PlayerCard";
@@ -39,8 +38,7 @@ export default function BuilderPage() {
 
   // ── Drag state ──
   const [dragOverSlotId, setDragOverSlotId] = useState<string | null>(null);
-  const [draggingPlayerId, setDraggingPlayerId] = useState<string | null>(null);
-  const draggedPlayerRef = useRef<string | null>(null);
+  const [draggedPlayer, setDraggedPlayer] = useState<Player | null>(null);
 
   // ── Transfer dialog ──
   const [pendingTransfer, setPendingTransfer] = useState<{
@@ -65,12 +63,24 @@ export default function BuilderPage() {
     []
   );
 
+  // ── Compute valid target slots for the currently dragged player ──
+  const validTargetSlotIds = useMemo<Set<string>>(() => {
+    if (!draggedPlayer) return new Set();
+    const valid = new Set<string>();
+    for (const slot of formationSlots) {
+      if (canPlacePlayer(draggedPlayer.primaryPosition, slot.allowedPositions)) {
+        valid.add(slot.id);
+      }
+    }
+    return valid;
+  }, [draggedPlayer, formationSlots]);
+
   // ── Handle drag start on player card ──
-  const handleDragStart = useCallback(
-    (e: React.DragEvent, playerId: string) => {
-      e.dataTransfer.setData("text/plain", playerId);
+  const handlePlayerDragStart = useCallback(
+    (e: React.DragEvent, player: Player) => {
+      e.dataTransfer.setData("text/plain", player.id);
       e.dataTransfer.effectAllowed = "move";
-      setDraggingPlayerId(playerId);
+      setDraggedPlayer(player);
     },
     []
   );
@@ -79,12 +89,8 @@ export default function BuilderPage() {
   const handleSlotDrop = useCallback(
     (slotId: string) => {
       setDragOverSlotId(null);
-      setDraggingPlayerId(null);
 
-      const playerId = draggedPlayerRef.current;
-      if (!playerId) return;
-
-      const player = allPlayers.find((p) => p.id === playerId);
+      const player = draggedPlayer;
       if (!player) return;
 
       const slot = formationSlots.find((s) => s.id === slotId);
@@ -97,19 +103,21 @@ export default function BuilderPage() {
           `${player.name} (${player.primaryPosition}) can't play in ${slot.label} position`,
           "error"
         );
+        setDraggedPlayer(null);
         return;
       }
 
       // Check if already in team
-      if (isPlayerInTeam(playerId)) {
+      if (isPlayerInTeam(player.id)) {
         showNotification(`${player.name} is already in your team`, "error");
+        setDraggedPlayer(null);
         return;
       }
 
       // Open transfer dialog
-      setPendingTransfer({ slotId, playerId, player });
+      setPendingTransfer({ slotId, playerId: player.id, player });
     },
-    [allPlayers, formationSlots, isPlayerInTeam, showNotification]
+    [draggedPlayer, formationSlots, isPlayerInTeam, showNotification]
   );
 
   // ── Handle transfer confirm ──
@@ -128,23 +136,15 @@ export default function BuilderPage() {
         );
       }
       setPendingTransfer(null);
+      setDraggedPlayer(null);
     },
     [pendingTransfer, assignPlayer, showNotification]
   );
 
-  // ── Handle global drop events on the pitch area ──
-  const handlePitchDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  }, []);
-
-  const handlePitchGlobalDrop = useCallback((e: React.DragEvent) => {
-    const playerId = e.dataTransfer.getData("text/plain");
-    if (playerId) {
-      draggedPlayerRef.current = playerId;
-    }
+  // ── Handle drag end ──
+  const handleDragEnd = useCallback(() => {
     setDragOverSlotId(null);
-    setDraggingPlayerId(null);
+    setDraggedPlayer(null);
   }, []);
 
   // Compute which players are in team for quick lookup
@@ -154,7 +154,7 @@ export default function BuilderPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" onDragEnd={handleDragEnd}>
       {/* ── Notification ── */}
       {notification && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-fadeIn">
@@ -180,7 +180,10 @@ export default function BuilderPage() {
           player={pendingTransfer.player}
           remainingBudget={remainingBudget}
           onConfirm={handleTransferConfirm}
-          onCancel={() => setPendingTransfer(null)}
+          onCancel={() => {
+            setPendingTransfer(null);
+            setDraggedPlayer(null);
+          }}
         />
       )}
 
@@ -198,8 +201,16 @@ export default function BuilderPage() {
           </Link>
 
           <div className="flex items-center gap-2">
+            {draggedPlayer && (
+              <div className="text-[10px] text-white/40 mr-2 animate-fadeIn">
+                Dragging: {draggedPlayer.name}
+              </div>
+            )}
             <button
-              onClick={generateRandomTeam}
+              onClick={() => {
+                generateRandomTeam();
+                showNotification("Random team generated!", "success");
+              }}
               className="
                 px-3 py-1.5 rounded-lg text-[10px] font-medium
                 bg-white/[0.06] text-white/50
@@ -210,7 +221,10 @@ export default function BuilderPage() {
               Random Team
             </button>
             <button
-              onClick={resetTeam}
+              onClick={() => {
+                resetTeam();
+                showNotification("Team reset", "success");
+              }}
               className="
                 px-3 py-1.5 rounded-lg text-[10px] font-medium
                 bg-white/[0.06] text-white/50
@@ -237,22 +251,17 @@ export default function BuilderPage() {
             />
 
             {/* Pitch */}
-            <div
-              onDragOver={handlePitchDragOver}
-              onDrop={handlePitchGlobalDrop}
-              onDragLeave={() => setDragOverSlotId(null)}
-            >
-              <Pitch
-                slots={formationSlots}
-                assignments={assignments}
-                getPlayerInSlot={getPlayerInSlot}
-                onSlotDrop={handleSlotDrop}
-                onSlotDragOver={(slotId) => setDragOverSlotId(slotId)}
-                onSlotDragLeave={() => setDragOverSlotId(null)}
-                onRemovePlayer={removePlayer}
-                dragOverSlotId={dragOverSlotId}
-              />
-            </div>
+            <Pitch
+              slots={formationSlots}
+              assignments={assignments}
+              getPlayerInSlot={getPlayerInSlot}
+              onSlotDrop={handleSlotDrop}
+              onSlotDragOver={(slotId) => setDragOverSlotId(slotId)}
+              onSlotDragLeave={() => setDragOverSlotId(null)}
+              onRemovePlayer={removePlayer}
+              dragOverSlotId={dragOverSlotId}
+              validTargetSlotIds={validTargetSlotIds}
+            />
           </div>
 
           {/* ── Right: Side Panel ── */}
@@ -285,21 +294,20 @@ export default function BuilderPage() {
             </div>
 
             {/* Player List */}
-            <div className="max-h-[450px] overflow-y-auto space-y-1 pr-0.5 custom-scrollbar">
+            <div
+              className="max-h-[480px] overflow-y-auto space-y-1 pr-0.5"
+              onDragEnd={handleDragEnd}
+            >
               {filteredPlayers.map((player) => (
                 <div
                   key={player.id}
                   draggable={!teamPlayerIds.has(player.id)}
-                  onDragStart={(e) => {
-                    e.dataTransfer.setData("text/plain", player.id);
-                    e.dataTransfer.effectAllowed = "move";
-                    draggedPlayerRef.current = player.id;
-                    setDraggingPlayerId(player.id);
-                  }}
+                  onDragStart={(e) => handlePlayerDragStart(e, player)}
                 >
                   <PlayerCard
                     player={player}
                     isInTeam={teamPlayerIds.has(player.id)}
+                    isDraggable={!teamPlayerIds.has(player.id)}
                   />
                 </div>
               ))}
